@@ -1,5 +1,5 @@
-﻿using System;
-using Kontent.Ai.Delivery.Abstractions;
+﻿using Kontent.Ai.Delivery.Abstractions;
+using System;
 using DefaultRetryPolicyOptions = Kontent.Ai.Delivery.Abstractions.DefaultRetryPolicyOptions;
 
 namespace Kontent.Ai.Delivery.Configuration
@@ -101,7 +101,13 @@ namespace Kontent.Ai.Delivery.Configuration
         IOptionalDeliveryConfiguration IOptionalDeliveryConfiguration.WithDefaultRenditionPreset(string presetCodename)
         {
             _deliveryOptions.DefaultRenditionPreset = presetCodename;
-            
+
+            return this;
+        }
+
+        IOptionalDeliveryConfiguration IOptionalDeliveryConfiguration.WithAssetUrlReplacement(string url)
+        {
+            _deliveryOptions.AssetUrlReplacement = url;
             return this;
         }
 

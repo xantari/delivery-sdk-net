@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FakeItEasy;
+﻿using FakeItEasy;
 using Kontent.Ai.Delivery.Abstractions;
 using Kontent.Ai.Delivery.Builders.DeliveryClient;
 using Kontent.Ai.Delivery.ContentItems;
@@ -10,6 +8,8 @@ using Kontent.Ai.Delivery.Tests.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
@@ -27,7 +27,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
         [Fact]
         public void BuildWithEnvironmentId_ReturnsDeliveryClientWithEnvironmentIdSet()
         {
-            var deliveryClient = (Delivery.DeliveryClient) DeliveryClientBuilder.WithEnvironmentId(EnvironmentId).Build();
+            var deliveryClient = (Delivery.DeliveryClient)DeliveryClientBuilder.WithEnvironmentId(EnvironmentId).Build();
 
             Assert.Equal(EnvironmentId, deliveryClient.DeliveryOptions.CurrentValue.EnvironmentId);
         }
@@ -36,18 +36,21 @@ namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
         public void BuildWithDeliveryOptions_ReturnsDeliveryClientWithDeliveryOptions()
         {
             var guid = new Guid(EnvironmentId);
+            var assetReplacementUrl = "https://cdn.example.com/assets";
 
-            var deliveryClient = (Delivery.DeliveryClient) DeliveryClientBuilder
+            var deliveryClient = (Delivery.DeliveryClient)DeliveryClientBuilder
                 .WithOptions(builder => builder
                     .WithEnvironmentId(guid)
                     .UsePreviewApi(PreviewApiKey)
                     .WithCustomEndpoint(PreviewEndpoint)
+                    .WithAssetUrlReplacement("https://cdn.example.com/assets")
                     .Build()
                 ).Build();
 
             Assert.Equal(EnvironmentId, deliveryClient.DeliveryOptions.CurrentValue.EnvironmentId);
             Assert.True(deliveryClient.DeliveryOptions.CurrentValue.UsePreviewApi);
             Assert.Equal(PreviewEndpoint, deliveryClient.DeliveryOptions.CurrentValue.PreviewEndpoint);
+            Assert.Equal(assetReplacementUrl, deliveryClient.DeliveryOptions.CurrentValue.AssetUrlReplacement);
         }
 
         [Fact]
@@ -65,7 +68,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
             var mockDeliveryHttpClient = new DeliveryHttpClient(new MockHttpMessageHandler().ToHttpClient());
             var mockLoggerFactory = A.Fake<ILoggerFactory>();
 
-            var deliveryClient = (Delivery.DeliveryClient) DeliveryClientBuilder
+            var deliveryClient = (Delivery.DeliveryClient)DeliveryClientBuilder
                 .WithEnvironmentId(EnvironmentId)
                 .WithDeliveryHttpClient(mockDeliveryHttpClient)
                 .WithContentLinkUrlResolver(mockContentLinkUrlResolver)
@@ -119,7 +122,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
         {
             var modelProvider = new FakeModelProvider();
 
-            var deliveryClient = (Delivery.DeliveryClient) DeliveryClientBuilder
+            var deliveryClient = (Delivery.DeliveryClient)DeliveryClientBuilder
                 .WithEnvironmentId(EnvironmentId)
                 .WithModelProvider(modelProvider)
                 .Build();
@@ -137,7 +140,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.DeliveryClient
                 typeof(UnknownContentItem)
             };
 
-            var deliveryClient = (Delivery.DeliveryClient) DeliveryClientBuilder
+            var deliveryClient = (Delivery.DeliveryClient)DeliveryClientBuilder
                 .WithEnvironmentId(_guid)
                 .Build();
             var actualResolvableInlineContentItemTypes = GetResolvableInlineContentItemTypes(deliveryClient);

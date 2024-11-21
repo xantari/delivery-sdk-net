@@ -1,6 +1,6 @@
-﻿using System;
-using Kontent.Ai.Delivery.Abstractions;
+﻿using Kontent.Ai.Delivery.Abstractions;
 using Kontent.Ai.Delivery.Configuration;
+using System;
 using Xunit;
 
 namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
@@ -8,7 +8,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
     public class DeliveryOptionsBuilderTests
     {
         private const string EnvironmentId = "550cec62-90a6-4ab3-b3e4-3d0bb4c04f5c";
-        private const string PreviewApiKey = 
+        private const string PreviewApiKey =
             "eyJ0eXAiOiwq14X65DLCJhbGciOiJIUzI1NiJ-.eyJqdGkiOiABCjJlM2FiOTBjOGM0ODVmYjdmZTDEFRQZGM1NDIyMCIsImlhdCI6IjE1Mjg454wexiLCJleHAiOiIxODc0NDg3NjqasdfwicHJvamVjdF9pZCI6Ij" +
             "g1OTEwOTlkN2458198ewqewZjI3Yzg5M2FhZTJiNTE4IiwidmVyIjoiMS4wLjAiLCJhdWQiewqgsdaWV3LmRlbGl2ZXIua2VudGljb2Nsb3VkLmNvbSJ9._tSzbNDpbE55dsaLUTGsdgesg4b693TFuhRCRsDyoc";
 
@@ -58,7 +58,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
             Assert.True(deliveryOptions.UseSecureAccess);
             Assert.Equal(SecuredApiKey, deliveryOptions.SecureAccessApiKey);
         }
-        
+
         [Fact]
         public void BuildWithRetryPolicyOptions()
         {
@@ -136,7 +136,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
                 .WithCustomEndpoint(customEndpoint)
                 .Build();
 
-           Assert.Equal(customEndpoint, deliveryOptions.PreviewEndpoint);
+            Assert.Equal(customEndpoint, deliveryOptions.PreviewEndpoint);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
         {
             const string customEndpoint = "http://www.custompreviewendpoint.com/";
             var uri = new Uri(customEndpoint, UriKind.Absolute);
-            
+
             var deliveryOptions = DeliveryOptionsBuilder
                 .CreateInstance()
                 .WithEnvironmentId(EnvironmentId)
@@ -185,7 +185,7 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
 
             Assert.Equal(customEndpoint, deliveryOptions.ProductionEndpoint);
         }
-        
+
         [Fact]
         public void BuildWithDefaultRenditionPreset()
         {
@@ -199,6 +199,21 @@ namespace Kontent.Ai.Delivery.Tests.Builders.Configuration
                 .Build();
 
             Assert.Equal(renditionPreset, deliveryOptions.DefaultRenditionPreset);
+        }
+
+        [Fact]
+        public void BuildWithAssetUrlReplacement()
+        {
+            var assetUrl = "https://www.example.com/assets";
+
+            var deliveryOptions = DeliveryOptionsBuilder
+                .CreateInstance()
+                .WithEnvironmentId(EnvironmentId)
+                .UseProductionApi()
+                .WithAssetUrlReplacement(assetUrl)
+                .Build();
+
+            Assert.Equal(assetUrl, deliveryOptions.AssetUrlReplacement);
         }
     }
 }

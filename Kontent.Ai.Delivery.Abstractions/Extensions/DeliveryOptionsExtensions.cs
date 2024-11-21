@@ -24,10 +24,11 @@
             o.DefaultRetryPolicyOptions = options.DefaultRetryPolicyOptions;
             o.IncludeTotalCount = options.IncludeTotalCount;
             // See #312
-            #pragma warning disable CS0618
+#pragma warning disable CS0618
             o.Name = options.Name;
-            #pragma warning restore CS0618
+#pragma warning restore CS0618
             o.DefaultRenditionPreset = options.DefaultRenditionPreset;
+            o.AssetUrlReplacement = options.AssetUrlReplacement;
         }
     }
 }
